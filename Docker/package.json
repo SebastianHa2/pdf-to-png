@@ -1,0 +1,19 @@
+{
+  "name": "Docker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "pdf-to-png.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "functions-framework --target=createImage --port=8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.5",
+    "@google-cloud/storage": "^7.15.0",
+    "ghostscript": "github:musubu/node-ghostscript",
+    "rimraf": "^6.0.1"
+  }
+}
