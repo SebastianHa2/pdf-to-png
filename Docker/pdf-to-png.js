@@ -106,6 +106,8 @@ async function convertPdfToImage(pdfPath) {
         .batch()
         .nopause()
         .device('png256') // Use 256-color PNG for speed
+        .option('-dDownsampleColorImages=true') // Enables color image downsampling
+        .option('-dColorImageResolution=72')
         .resolution(72)   // Reduce resolution to 72 DPI
         .output(quotedImagePath)
         .input(quotedPdfPath)
