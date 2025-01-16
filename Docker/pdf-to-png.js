@@ -106,7 +106,7 @@ async function convertPdfToImage(pdfPath) {
       gs()
         .batch()
         .nopause()
-        .device('png256') // Use 256-color PNG for speed
+        .device('pngalpha') // Use 256-color PNG for speed
         .resolution(72)   // Reduce resolution to 72 DPI
         .output(quotedImagePath) // Use quoted paths
         .input(quotedPdfPath)    // Use quoted paths
