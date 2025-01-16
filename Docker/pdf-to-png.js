@@ -7,13 +7,23 @@ const fs = require('fs')
 const rimraf = require('rimraf')
 const os = require('os')
 const gs = require('ghostscript')
+const admin = require('firebase-admin');
 
 const app = express()
 app.use(bodyParser.json()) // parse JSON bodies
 
-// Create a Storage client
-const GOOGLE_PROJECT_ID = process.env.GCLOUD_PROJECT || process.env.GCP_PROJECT
-const storage = new Storage({ projectId: GOOGLE_PROJECT_ID })
+// Parse the service account JSON from the injected secret
+const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+
+// Initialize Firebase Admin
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+// Initialize Google Cloud Storage with the parsed credentials
+const storage = new Storage({
+  credentials: serviceAccount,
+});
 
 // The name of your bucket
 const BUCKET_NAME = 'pdf-to-png'
