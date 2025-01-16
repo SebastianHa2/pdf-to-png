@@ -1,9 +1,9 @@
 {
     "name": "pdf-to-png-service",
     "version": "1.0.0",
-    "main": "server.js",
+    "main": "pdf-to-png.js",
     "scripts": {
-      "start": "node server.js"
+      "start": "node pdf-to-png.js"
     },
     "dependencies": {
       "@google-cloud/storage": "^7.15.0",
