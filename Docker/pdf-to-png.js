@@ -17,6 +17,7 @@ const storage = new Storage({ projectId: GOOGLE_PROJECT_ID })
 
 // The name of your bucket
 const BUCKET_NAME = 'pdf-to-png'
+const DESTINATION_BUCKET = 'pdf-to-png-output'
 
 // This is the main endpoint that Pub/Sub (push subscription) will POST to
 app.post('/', async (req, res) => {
@@ -64,7 +65,7 @@ app.post('/', async (req, res) => {
     const localPngPath = await convertPdfToImage(localPdfPath)
     // 3) Upload PNG back
     const newFilePath = filePath.replace(/\.pdf$/i, '.png')
-    await uploadImage(localPngPath, bucketName, newFilePath)
+    await uploadImage(localPngPath, DESTINATION_BUCKET, newFilePath)
     // 4) Cleanup
     deleteDir(tempDir)
 
