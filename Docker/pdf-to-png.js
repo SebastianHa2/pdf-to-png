@@ -18,6 +18,7 @@ const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
 // Initialize Firebase Admin
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://tangle-157402.firebaseio.com",
 });
 
 // Initialize Google Cloud Storage with the parsed credentials
