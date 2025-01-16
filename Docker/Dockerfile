@@ -10,7 +10,7 @@ COPY package*.json ./
 RUN npm install --only=prod
 
 # Copy your server code
-COPY server.js .  # or rename pdf-to-png.js -> server.js
+COPY pdf-to-png.js .
 
 EXPOSE 8080
 
