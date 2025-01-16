@@ -91,9 +91,13 @@ async function downloadPdf (bucketName, filePath, tempDir) {
   return destination
 }
 
-async function convertPdfToImage (pdfPath) {
-  const imagePath = pdfPath.replace(/\.pdf$/i, '.png')
-  console.log(`Converting PDF -> PNG: ${pdfPath} -> ${imagePath}`)
+async function convertPdfToImage(pdfPath) {
+  // Escape the file paths by wrapping them in double quotes
+  const imagePath = pdfPath.replace(/\.pdf$/i, '.png');
+  const quotedPdfPath = `"${pdfPath}"`;
+  const quotedImagePath = `"${imagePath}"`;
+
+  console.log(`Converting PDF to PNG: ${quotedPdfPath} -> ${quotedImagePath}`);
 
   return new Promise((resolve, reject) => {
     try {
@@ -101,24 +105,24 @@ async function convertPdfToImage (pdfPath) {
         .batch()
         .nopause()
         .device('png16m')
-        .output(imagePath)
-        .input(pdfPath)
+        .output(quotedImagePath)
+        .input(quotedPdfPath)
         .exec((err, stdout, stderr) => {
           if (!err) {
-            console.log('Ghostscript conversion success')
-            console.log('stdout:', stdout)
-            console.log('stderr:', stderr)
-            resolve(imagePath)
+            console.log('Ghostscript conversion success');
+            console.log('stdout:', stdout);
+            console.log('stderr:', stderr);
+            resolve(imagePath);
           } else {
-            console.error('Ghostscript error:', err)
-            reject(err)
+            console.error('Ghostscript error:', err);
+            reject(err);
           }
-        })
+        });
     } catch (error) {
-      console.error('Ghostscript execution failed:', error)
-      reject(error)
+      console.error('Ghostscript execution failed:', error);
+      reject(error);
     }
-  })
+  });
 }
 
 async function uploadImage (localPngPath, bucketName, filePath) {
