@@ -113,7 +113,7 @@ app.post('/', async (req, res) => {
         if (allExtracted) {
           console.log(`All order items for orderId ${orderId} have been processed.`);
           try {
-            const response = await axios.post('https://tangleapps.com/webhook?workflow=-OG_-eWTqeiFDYRakLlc&dashboard=-N6rrHXdX4pO-T2cMbmS', {
+            const response = await axios.post('https://tangleapps.com/webhook?workflow=-O9F7CrkvqptCb8Dolqj&dashboard=-OG_-eWTqeiFDYRakLlc', {
               order: orderId, // Pass the orderId as the payload
             });
             console.log(`Successfully sent order ${orderId} to the webhook. Response:`, response.data);
