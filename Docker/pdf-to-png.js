@@ -92,8 +92,9 @@ async function downloadPdf (bucketName, filePath, tempDir) {
 }
 
 async function convertPdfToImage(pdfPath) {
-  // Escape the file paths by wrapping them in double quotes
   const imagePath = pdfPath.replace(/\.pdf$/i, '.png');
+
+  // Wrap paths in quotes to handle special characters
   const quotedPdfPath = `"${pdfPath}"`;
   const quotedImagePath = `"${imagePath}"`;
 
@@ -104,7 +105,8 @@ async function convertPdfToImage(pdfPath) {
       gs()
         .batch()
         .nopause()
-        .device('png16m')
+        .device('png256') // Use 256-color PNG for speed
+        .resolution(72)   // Reduce resolution to 72 DPI
         .output(quotedImagePath)
         .input(quotedPdfPath)
         .exec((err, stdout, stderr) => {
