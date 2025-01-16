@@ -8,6 +8,7 @@ const rimraf = require('rimraf')
 const os = require('os')
 const gs = require('ghostscript')
 const admin = require('firebase-admin');
+const axios = require('axios')
 
 const app = express()
 app.use(bodyParser.json()) // parse JSON bodies
@@ -111,7 +112,14 @@ app.post('/', async (req, res) => {
   
         if (allExtracted) {
           console.log(`All order items for orderId ${orderId} have been processed.`);
-          // Optionally, trigger further actions here (e.g., notifications)
+          try {
+            const response = await axios.post('https://tangleapps.com/webhook?workflow=-OG_-eWTqeiFDYRakLlc&dashboard=-N6rrHXdX4pO-T2cMbmS', {
+              order: orderId, // Pass the orderId as the payload
+            });
+            console.log(`Successfully sent order ${orderId} to the webhook. Response:`, response.data);
+          } catch (apiError) {
+            console.error(`Failed to notify webhook for order ${orderId}:`, apiError.message);
+          }
         } else {
           console.log(`Not all order items for orderId ${orderId} have been processed.`);
         }
