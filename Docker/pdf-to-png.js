@@ -72,7 +72,7 @@ app.post('/', async (req, res) => {
     return res.status(200).send(`Converted PDF to PNG for file: ${filePath}`)
   } catch (err) {
     console.error('Error handling PDF->PNG:', err)
-    return res.sendStatus(500)
+    return res.sendStatus(200)
   }
 })
 
