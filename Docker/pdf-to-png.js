@@ -66,6 +66,17 @@ app.post('/', async (req, res) => {
       return res.status(200).send('Not a PDF, ignoring.')
     }
 
+    // Extract orderId and orderItemId from the file name
+    const match = filePath.match(/\(([^)]+)\)\(([^)]+)\)/);
+    if (!match) {
+      console.error(`Invalid file name format: ${filePath}`);
+      return res.status(400).send('Invalid file name format.');
+    }
+
+    const orderId = match[1];
+    const orderItemId = match[2];
+    console.log(`Extracted orderId: ${orderId}, orderItemId: ${orderItemId}`);
+
     // Create a /tmp folder
     const tempDir = createTempDir(filePath)
 
@@ -76,7 +87,38 @@ app.post('/', async (req, res) => {
     // 3) Upload PNG back
     const newFilePath = filePath.replace(/\.pdf$/i, '.png')
     await uploadImage(localPngPath, DESTINATION_BUCKET, newFilePath)
-    // 4) Cleanup
+
+
+    if(orderId && orderItemId) {
+      // 4) Update Firebase
+      const tablesRef = admin.database().ref(`dashboards/-OG_-eWTqeiFDYRakLlc/models`);
+      await tablesRef.child('orderItems').child(orderItemId).update({ pngExtracted: true });
+      console.log(`Updated pngExtracted=true for orderItem: ${orderItemId}`);
+
+      // 5) Check if all orderItems for this orderId are complete
+      const orderItemsSnapshot = await tablesRef
+        .child('orderItems')
+        .orderByChild('order')
+        .equalTo(orderId)
+        .once('value');
+
+      let orderItems = orderItemsSnapshot.val();
+      if(orderItemsSnapshot.val()) {
+        // Only check order items with approved status
+        orderItems = Object.values(orderItems).filter(orderItem => orderItem.orderItemStatus === '-O-MBXnADt_rc_l7Lm8U')
+        const allExtracted = orderItems.every(item => item.pngExtracted);
+  
+        if (allExtracted) {
+          console.log(`All order items for orderId ${orderId} have been processed.`);
+          // Optionally, trigger further actions here (e.g., notifications)
+        } else {
+          console.log(`Not all order items for orderId ${orderId} have been processed.`);
+        }
+      }
+
+    }
+
+    // 6) Cleanup
     deleteDir(tempDir)
 
     console.log(`Successfully converted ${filePath} -> ${newFilePath}`)
