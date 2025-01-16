@@ -106,23 +106,20 @@ async function convertPdfToImage(pdfPath) {
         .batch()
         .nopause()
         .device('png256') // Use 256-color PNG for speed
-        .resolution(72)   // Set overall resolution to 72 DPI
-        .output(quotedImagePath)
-        .input(quotedPdfPath)
-        .exec(
-          `-dDownsampleColorImages=true -dColorImageResolution=72`,
-          (err, stdout, stderr) => {
-            if (!err) {
-              console.log('Ghostscript conversion success');
-              console.log('stdout:', stdout);
-              console.log('stderr:', stderr);
-              resolve(imagePath);
-            } else {
-              console.error('Ghostscript error:', err);
-              reject(err);
-            }
+        .resolution(72)   // Reduce resolution to 72 DPI
+        .output(quotedImagePath) // Use quoted paths
+        .input(quotedPdfPath)    // Use quoted paths
+        .exec((err, stdout, stderr) => {
+          if (!err) {
+            console.log('Ghostscript conversion success');
+            console.log('stdout:', stdout);
+            console.log('stderr:', stderr);
+            resolve(imagePath);
+          } else {
+            console.error('Ghostscript error:', err);
+            reject(err);
           }
-        );
+        });
     } catch (error) {
       console.error('Ghostscript execution failed:', error);
       reject(error);
