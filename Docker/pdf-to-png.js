@@ -93,7 +93,7 @@ app.post('/', async (req, res) => {
 
     if(orderId && orderItemId) {
       // 4) Update Firebase
-      const tablesRef = admin.database().ref(`dashboards/-OG_-eWTqeiFDYRakLlc/models`);
+      const tablesRef = admin.database().ref(`dashboards/-N6rrHXdX4pO-T2cMbmS/models`);
       await tablesRef.child('orderItems').child(orderItemId).update({ pngExtracted: true });
       console.log(`Updated pngExtracted=true for orderItem: ${orderItemId}`);
 
@@ -113,7 +113,7 @@ app.post('/', async (req, res) => {
         if (allExtracted) {
           console.log(`All order items for orderId ${orderId} have been processed.`);
           try {
-            const response = await axios.post('https://tangleapps.com/webhook?workflow=-O9F7CrkvqptCb8Dolqj&dashboard=-OG_-eWTqeiFDYRakLlc', {
+            const response = await axios.post('https://tangleapps.com/webhook?workflow=-OGo_Wq_agZdYobMm4ev&dashboard=-N6rrHXdX4pO-T2cMbmS', {
               order: orderId, // Pass the orderId as the payload
             });
             console.log(`Successfully sent order ${orderId} to the webhook. Response:`, response.data);
